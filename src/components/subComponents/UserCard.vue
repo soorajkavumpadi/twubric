@@ -101,7 +101,6 @@
 	},
     methods: {
         removeUser(){
-            console.log(this.userId)
             this.$emit('remove-user',this.userId);
         }
     }

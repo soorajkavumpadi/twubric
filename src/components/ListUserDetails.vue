@@ -32,18 +32,18 @@
           Joined Twitter between
         </h6>
         <div class="row" style="display: flex;
-    justify-content: center">
+              justify-content: center">
           <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <div class="flatpickr">
               <label for="startTime">
-               Start Date/Time :
+                Start Date/Time :
               </label>
               <br />
               <flat-pickr
-                v-model="filters.startDate"
-                :config="flatpickrDateTimeConfig"
-                id="startTime"
-                class="form-control" />
+                  v-model="filters.startDate"
+                  :config="flatpickrDateTimeConfig"
+                  id="startTime"
+                  class="form-control" />
               <br />
             </div>
           </div>
@@ -62,15 +62,25 @@
 
       </div>
         <div id="user-list" class="row">
-					<UserCard
-						v-for="(user, index) in filteredList"
-						class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12"
-						:key="'user-' + index"
-						:user-id="user.uid"
-						:user="user"
-            :twubric="user.twubric"
-						:slno="index + 1" 
-            @remove-user="removeUser($event)"/>
+
+          <template v-if="filteredList.length > 0">
+            <UserCard
+              v-for="(user, index) in filteredList"
+              class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12"
+              :key="'user-' + index"
+              :user-id="user.uid"
+              :user="user"
+              :twubric="user.twubric"
+              :slno="index + 1" 
+              @remove-user="removeUser($event)"/>
+          </template>
+          <template v-else>
+            <div class="col-md-12">    
+              <h4>
+                No User Found
+              </h4>
+            </div>
+          </template>
         </div>
     </div>
   </template>
@@ -159,7 +169,6 @@ Vue.use(vueMoment);
       
     this.users = this.$_.cloneDeep(this.userList)
     this.filteredList = this.$_.cloneDeep(this.userList)
-    console.log(this.filteredList);
   },
   watch: {
     filters: {
@@ -173,16 +182,13 @@ Vue.use(vueMoment);
   },
   methods: {
     sortList(sortBy,method) {
-      console.log(sortBy);
       if(sortBy != this.selectedMethod) this.sortedbyASC = true;
       this.selectedMethod = sortBy;
       if (this.sortedbyASC) {
         this.filteredList =  this.$_.orderBy(this.users, [method], ['asc']);
-        console.log(this.filteredList);
         this.sortedbyASC = false;
       } else {
         this.filteredList =  this.$_.orderBy(this.users, [method], ['desc']);
-        console.log(this.filteredList);
         this.sortedbyASC = true;
       }
     },
@@ -196,7 +202,6 @@ Vue.use(vueMoment);
       })
     },
     removeUser(userId){
-      console.log(userId)
       this.filteredList = this.$_.filter(this.filteredList, (user) => {
         if(user.uid != userId) return user;
       })
